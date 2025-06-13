@@ -84,7 +84,7 @@ over "Render" (
 def Xform "World"
 {
     def "ur5e" (
-        prepend payload = @/home/lfw/文档/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/direct/manipulator_draw/asset/ur5e.usd@
+        prepend payload = @omniverse://localhost/NVIDIA/Assets/Isaac/4.2/Isaac/Robots/UniversalRobots/ur5e/ur5e.usd@
     )
     {
         quatd xformOp:orient = (0, 0, 0, 1)

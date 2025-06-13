@@ -74,7 +74,7 @@
 def Xform "World"
 {
     def "table_instanceable" (
-        prepend payload = @/home/lfw/文档/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/direct/manipulator_draw/asset/table_instanceable.usd@
+        prepend payload = @omniverse://localhost/NVIDIA/Assets/Isaac/4.2/Isaac/Props/Mounts/SeattleLabTable/table_instanceable.usd@
     )
     {
         double3 xformOp:rotateXYZ = (0, 0, 0)
@@ -83,7 +83,7 @@ def Xform "World"
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
 
         def "plane" (
-            prepend payload = @/home/lfw/文档/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/direct/manipulator_draw/asset/plane.usd@
+            prepend payload = @omniverse://localhost/NVIDIA/Assets/Isaac/4.2/Isaac/Props/Shapes/plane.usd@
         )
         {
             double3 xformOp:scale = (0.8, 0.8, 1)
@@ -110,7 +110,7 @@ def Xform "World"
             def Shader "Shader"
             {
                 uniform token info:implementationSource = "sourceAsset"
-                uniform asset info:mdl:sourceAsset = @/home/lfw/文档/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/direct/manipulator_draw/asset/Paper_Plain.mdl@
+                uniform asset info:mdl:sourceAsset = @omniverse://localhost/NVIDIA/Materials/vMaterials_2/Paper/Paper_Plain.mdl@
                 uniform token info:mdl:sourceAsset:subIdentifier = "Paper_Plain"
                 token outputs:out (
                     renderType = "material"
