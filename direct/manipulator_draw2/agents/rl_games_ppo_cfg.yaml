@@ -1,0 +1,142 @@
+params:
+  # 随机种子，用于确保实验的可重复性
+  seed: 42
+
+  # 环境包装器裁剪设置
+  env:
+    # 观察值裁剪上限，防止观察值过大导致训练不稳定
+    clip_observations: 5.0
+    # 动作值裁剪上限，限制动作空间范围在[-1.0, 1.0]
+    clip_actions: 1.0
+
+  algo:
+    # 使用的算法名称：Actor-Critic连续动作空间算法
+    name: a2c_continuous
+
+  model:
+    # 使用的模型类型：带有log标准差的连续Actor-Critic
+    name: continuous_a2c_logstd
+
+  # 神经网络结构设置
+  network:
+    # 网络类型：Actor-Critic架构
+    name: actor_critic
+    # 是否使用共享网络架构（False表示策略网络和价值网络共享参数）
+    separate: False
+    # 动作空间相关设置
+    space:
+      continuous:
+        # 均值（mu）输出层的激活函数，None表示线性输出
+        mu_activation: None
+        # 标准差（sigma）输出层的激活函数，None表示线性输出
+        sigma_activation: None
+
+        # 均值网络初始化方法
+        mu_init:
+          name: default
+        # 标准差网络初始化方法
+        sigma_init:
+          name: const_initializer
+          # 初始化为常数0
+          val: 0
+        # 固定标准差，不随着训练更新（使用参数化的固定噪声水平）
+        fixed_sigma: True
+    # 多层感知机(MLP)网络结构
+    mlp:
+      # 各隐藏层的神经元数量
+      units: [512, 512, 256, 128]
+      # 激活函数：指数线性单元(ELU)
+      activation: elu
+      # 是否使用D2RL架构（深度残差网络结构）
+      d2rl: False
+
+      # 权重初始化器
+      initializer:
+        name: default
+      # 正则化器（防止过拟合）
+      regularizer:
+        name: None
+
+  load_checkpoint: False # flag which sets whether to load the checkpoint
+  load_path: '' # path to the checkpoint to load
+
+  config:
+    # 实验名称
+    name: manipulator_draw
+    # 环境名称，必须与RL-Games注册的环境匹配
+    env_name: rlgpu
+    # 训练设备
+    device: 'cuda:0'
+    device_name: 'cuda:0'
+    # 是否使用多GPU训练
+    multi_gpu: False
+    # 是否使用PPO算法
+    ppo: True
+    # 是否使用混合精度训练（FP16）
+    mixed_precision: False
+    # 是否对输入进行标准化
+    normalize_input: True
+    # 是否对价值函数输出进行标准化
+    normalize_value: True
+    # 是否在回合结束时使用价值引导
+    value_bootstrap: True
+    # 并行环境数量（由脚本中设置）
+    num_actors: -1  # configured from the script (based on num_envs)
+    # 奖励整形器，用于缩放奖励值
+    reward_shaper:
+      scale_value: 0.01
+    # 是否标准化优势函数
+    normalize_advantage: True
+    # 折扣因子，用于计算未来奖励的折现值
+    gamma: 0.99
+    # GAE-Lambda参数，用于计算广义优势估计
+    tau : 0.95
+    # 学习率
+    learning_rate: 1e-4
+    # 学习率调度策略：自适应调整
+    lr_schedule: adaptive
+    # 调度类型：标准
+    schedule_type: standard
+    # KL散度阈值，用于自适应学习率调整
+    kl_threshold: 0.016
+    # 获胜分数（通常是环境相关的目标）
+    score_to_win: 100000
+    # 最大训练轮数
+    max_epochs: 5000
+    # 在多少轮之后开始保存最佳模型
+    save_best_after: 100
+    # 模型保存频率（每多少轮保存一次）
+    save_frequency: 200
+    # 是否打印训练统计信息
+    print_stats: True
+    # 梯度范数裁剪值，防止梯度爆炸
+    grad_norm: 0.5
+    # 熵系数，用于鼓励探索
+    entropy_coef: 0.01
+    # 是否截断梯度
+    truncate_grads: True
+    # PPO的epsilon裁剪参数
+    e_clip: 0.2
+    # 每个PPO更新的历史步长
+    horizon_length: 16
+    # 小批量大小，用于SGD更新
+    minibatch_size: 2048
+    # 每次收集数据后的训练轮数
+    mini_epochs: 8
+    # 价值函数损失的权重系数
+    critic_coef: 4
+    # 是否裁剪价值函数损失
+    clip_value: True
+    # 序列长度，用于处理时序数据
+    seq_length: 4
+    # 边界损失系数，用于确保动作在有效范围内
+    bounds_loss_coef: 0.0001
+
+    # 评估（播放）设置
+    player:
+      # 是否使用确定性策略（测试时不引入随机性）
+      deterministic: True
+      # 评估时玩的游戏数量
+      games_num: 100000
+      # 是否打印评估统计信息
+      print_stats: True
